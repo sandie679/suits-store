@@ -22,7 +22,12 @@ const handler = NextAuth({
         const isValid = await bcrypt.compare(credentials!.password, user.password);
         if (!isValid) throw new Error("Invalid password");
 
-        return { id: user._id.toString(), name: user.fullName, email: user.email };
+        return {
+          id: user._id.toString(),
+          name: user.fullName,
+          email: user.email,
+          isAdmin: user.email === process.env.ADMIN_EMAIL?.replace(/"/g, ''),
+        };
       },
     }),
   ],
@@ -31,8 +36,29 @@ const handler = NextAuth({
     strategy: "jwt",
   },
 
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+        token.isAdmin = user.isAdmin || (user.email === process.env.ADMIN_EMAIL?.replace(/"/g, ''));
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user = {
+          ...session.user,
+          email: token.email as string,
+          isAdmin: token.isAdmin as boolean,
+        };
+      }
+      return session;
+    },
+  },
+
   pages: {
-    signIn: "/signin", // optional custom sign-in page
+    signIn: "/signin",
   },
 
   secret: process.env.NEXTAUTH_SECRET,

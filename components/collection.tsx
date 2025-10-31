@@ -2,18 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CollectionItem {
   _id: string;
   imageUrl: string;
-  title: string;
   link: string;
 }
 
 const Collection = () => {
-  const router = useRouter();
   const [collections, setCollections] = useState<CollectionItem[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -30,15 +27,13 @@ const Collection = () => {
     fetchCollections();
   }, []);
 
-  
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
     const scrollAmount = 350;
-    if (direction === "left") {
-      scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    } else {
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
   };
 
   if (collections.length === 0) {
@@ -49,7 +44,7 @@ const Collection = () => {
     <div className="max-w-7xl mx-auto px-4 py-16 relative">
       <h2 className="text-3xl font-bold text-left mb-8">Shop Our Collection</h2>
 
-    
+      
       <button
         onClick={() => scroll("left")}
         className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-2 z-10"
@@ -72,24 +67,26 @@ const Collection = () => {
         {collections.map((item) => (
           <div
             key={item._id}
-            className="min-w-[300px] flex-shrink-0shadow-md  overflow-hidden hover:shadow-xl transition duration-300"
+            className="min-w-[300px] flex-shrink-0 shadow-md overflow-hidden hover:shadow-xl transition duration-300"
           >
             <div className="relative w-full h-[350px]">
               <Image
                 src={item.imageUrl}
-                alt={item.title || "Collection image"} 
+                alt="Collection image"
                 fill
                 className="object-cover"
               />
             </div>
 
             <div className="p-4 text-center">
-              <h3
-                onClick={() => router.push(`/products?category=${item.link}`)}
-                className="text-lg font-semibold text-gray-900 underline cursor-pointer hover:text-black"
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black underline font-bold"
               >
                 {item.link}
-              </h3>
+              </a>
             </div>
           </div>
         ))}

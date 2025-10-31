@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,7 +21,13 @@ export default function SignInPage() {
     if (res?.error) {
       setError(res.error);
     } else {
-      router.push("/");
+     
+      const session = await getSession();
+      if (session?.user?.isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
     }
   };
 

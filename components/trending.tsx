@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import AddToCartButton from "./AddToCartButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,12 +132,15 @@ export default function Trending() {
                     <div className="p-4 space-y-2">
                       <p className="text-lg font-medium text-gray-900">{post.description}</p>
                       <p className="text-gray-600 font-semibold">{post.price}</p>
-                      <span
-                        className="inline-block mt-3 text-black underline cursor-pointer font-semibold"
-                        onClick={() => router.push(post.link)}
-                      >
-                        {post.link}
-                      </span>
+                      <div className="flex gap-2 mt-3">
+                        <AddToCartButton productId={post._id} className="flex-1 text-sm py-2" />
+                        <button
+                          onClick={() => router.push(post.link)}
+                          className="flex-1 bg-gray-100 text-gray-800 py-2 px-3 rounded text-sm font-medium hover:bg-gray-200 transition-colors"
+                        >
+                          View Details
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

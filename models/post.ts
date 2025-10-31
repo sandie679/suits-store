@@ -8,6 +8,9 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    images: [{
+      type: String,
+    }],
     description: {
       type: String,
       required: true,
@@ -18,7 +21,11 @@ const postSchema = new Schema(
     },
     link: {
       type: String,
-      required: true, 
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

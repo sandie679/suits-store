@@ -9,10 +9,10 @@ export const GET = async () => {
     
     const transformedPosts = posts.map(post => ({
       _id: post._id,
-      title: post.description || 'Untitled Item', 
+      title: post.description || 'Untitled Item',
       price: post.price,
       imageUrl: post.imageUrl,
-      images: post.images || [post.imageUrl], 
+      images: post.images || [post.imageUrl],
       description: post.description,
       link: post.link,
       createdAt: post.createdAt,

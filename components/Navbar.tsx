@@ -35,13 +35,13 @@ export default function Navbar() {
             <Link href="/trending" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Trending
             </Link>
-            <Link href="/cart" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            <Link href="/weddingcollection" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Wedding
             </Link>
-            <Link href="/profile" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            <Link href="/womencollection" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Womenswear
             </Link>
-            <Link href="/admin" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            <Link href="/mensware" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Menswear
             </Link>
           </div>
@@ -125,17 +125,17 @@ export default function Navbar() {
             <Link href="/" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
               Home
             </Link>
-            <Link href="/product" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-              Shop
+            <Link href="/trending" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+           Trending
             </Link>
-            <Link href="/cart" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-              Cart
+            <Link href="/weddingcollection" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+              Wedding
             </Link>
-            <Link href="/profile" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-              Profile
+            <Link href="/womencollection" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+              Womenswear
             </Link>
-            <Link href="/admin" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-              Admin
+            <Link href="/menswear" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+             Menswear
             </Link>
        
             <div className="flex items-center space-x-4 py-2">
@@ -148,9 +148,7 @@ export default function Navbar() {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>
-                <span className="absolute -top-1 -right-1 bg-amber-500 text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                  0
-                </span>
+                
               </Link>
             </div>
             <div className="pt-2">

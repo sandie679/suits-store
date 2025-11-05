@@ -26,7 +26,6 @@ export default function Trending() {
   const [cardWidth, setCardWidth] = useState(0);
   const router = useRouter();
 
-  // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -40,7 +39,7 @@ export default function Trending() {
     fetchPosts();
   }, []);
 
-  // Set up GSAP scroll and calculate card width dynamically
+  
   useEffect(() => {
     if (!containerRef.current || !sectionRef.current || posts.length === 0) return;
 
@@ -48,7 +47,7 @@ export default function Trending() {
     const container = containerRef.current;
     const gap = 24;
 
-    // Calculate the width of the first card dynamically
+   
     const firstCard = container.querySelector<HTMLDivElement>("div");
     const cardWidthCalculated = firstCard ? firstCard.offsetWidth + gap : 320 + gap;
     setCardWidth(cardWidthCalculated);
@@ -134,12 +133,7 @@ export default function Trending() {
                       <p className="text-gray-600 font-semibold">{post.price}</p>
                       <div className="flex gap-2 mt-3">
                         <AddToCartButton productId={post._id} className="flex-1 text-sm py-2" />
-                        <button
-                          onClick={() => router.push(post.link)}
-                          className="flex-1 bg-gray-100 text-gray-800 py-2 px-3 rounded text-sm font-medium hover:bg-gray-200 transition-colors"
-                        >
-                          View Details
-                        </button>
+                        
                       </div>
                     </div>
                   </div>

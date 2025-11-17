@@ -2,26 +2,21 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const womenswareSchema = new Schema(
+const menswareSchema = new Schema(
   {
-    imageUrl: {
+    title: {
       type: String,
       required: true,
     },
-    
     description: {
       type: String,
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
-    link: {
-      type: String,
-      required: true,
-    },
-    title: {
+    imageUrl: {
       type: String,
       required: true,
     },
@@ -29,4 +24,4 @@ const womenswareSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Womensware || mongoose.model("Womensware", womenswareSchema);
+export default mongoose.models.Mensware || mongoose.model("Mensware", menswareSchema);

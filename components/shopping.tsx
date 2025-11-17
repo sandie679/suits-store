@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface StyleItem {
   _id: string;
@@ -14,7 +15,16 @@ interface StyleItem {
 
 const Shopping = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [items, setItems] = useState<StyleItem[]>([]);
+
+  const handleShopClick = () => {
+    if (session) {
+      router.push('/collections');
+    } else {
+      router.push('/signin');
+    }
+  };
 
   useEffect(() => {
     const fetchStyles = async () => {
@@ -60,7 +70,7 @@ const Shopping = () => {
                 {item.description}
               </p>
               <span
-                onClick={() => router.push(`/products?category=${item.link}`)}
+                onClick={handleShopClick}
                 className="text-black font-bold underline cursor-pointer "
               >
                 {item.link}

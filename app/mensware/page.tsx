@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import AddToCartButton from '../../components/AddToCartButton';
 
-interface WomenItem {
+interface MenItem {
   _id: string;
   title: string;
   description: string;
@@ -12,14 +12,14 @@ interface WomenItem {
   imageUrl: string;
 }
 
-export default function WomenPage() {
-  const [items, setItems] = useState<WomenItem[]>([]);
+export default function MenPage() {
+  const [items, setItems] = useState<MenItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchWomenItems = async () => {
+    const fetchMenItems = async () => {
       try {
-        const res = await fetch('/api/womensware');
+        const res = await fetch('/api/mensware');
         const data = await res.json();
         setItems(data);
       } catch (error) {
@@ -28,7 +28,7 @@ export default function WomenPage() {
         setLoading(false);
       }
     };
-    fetchWomenItems();
+    fetchMenItems();
   }, []);
 
   if (loading) {
@@ -43,7 +43,7 @@ export default function WomenPage() {
     <section className="py-12 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">
-         Womensware Collection
+         Mensware Collection
         </h1>
 
         {items.length === 0 ? (

@@ -1,3 +1,5 @@
+'use client';
+
 import Works from "@/components/works";
 import Trending from "@/components/trending";
 import Discount from "@/components/discount";
@@ -5,8 +7,22 @@ import Shopping from "@/components/shopping";
 import Card from "@/components/card";
 import Collection from "@/components/collection";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleShopNow = () => {
+    if (session) {
+      router.push('/collections');
+    } else {
+      router.push('/signin');
+    }
+  };
+
   return (
     <div className="min-h-screen font-[Inter]">
       <section
@@ -39,12 +55,12 @@ export default function Home() {
           </p>
 
           <div className="mt-10 flex justify-center gap-4">
-            <Link
-              href="/product"
+            <button
+              onClick={handleShopNow}
               className="px-6 py-2 text-lg md:text-xl font-medium rounded-full bg-black text-white hover:bg-gray-800 shadow-xl transition-all duration-300"
             >
               Shop Now
-            </Link>
+            </button>
 
             <Link
               href="/about"

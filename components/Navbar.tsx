@@ -4,11 +4,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { data: session,  } = useSession();
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleCollectionClick = (path: string) => {
+    if (session) {
+      router.push(path);
+    } else {
+      router.push('/signin');
+    }
+  };
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-gray-900 to-zinc-900 shadow-2xl sticky top-0 z-50 border-b border-gold-500/20">
@@ -32,18 +42,18 @@ export default function Navbar() {
             <Link href="/" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Home
             </Link>
-            <Link href="/trending" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            <Link href="/trend" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Trending
             </Link>
-            <Link href="/weddingcollection" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            <button onClick={() => handleCollectionClick('/weddingcollection')} className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Wedding
-            </Link>
-            <Link href="/womencollection" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            </button>
+            <button onClick={() => handleCollectionClick('/womencollection')} className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Womenswear
-            </Link>
-            <Link href="/mensware" className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
+            </button>
+            <button onClick={() => handleCollectionClick('/mensware')} className="text-gray-300 hover:text-amber-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300 hover:bg-white/5">
               Menswear
-            </Link>
+            </button>
           </div>
 
         
@@ -128,15 +138,15 @@ export default function Navbar() {
             <Link href="/trending" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
            Trending
             </Link>
-            <Link href="/weddingcollection" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+            <button onClick={() => handleCollectionClick('/weddingcollection')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
               Wedding
-            </Link>
-            <Link href="/womencollection" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+            </button>
+            <button onClick={() => handleCollectionClick('/womencollection')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
               Womenswear
-            </Link>
-            <Link href="/menswear" className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+            </button>
+            <button onClick={() => handleCollectionClick('/collections')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
              Menswear
-            </Link>
+            </button>
        
             <div className="flex items-center space-x-4 py-2">
               <button className="text-gray-300 hover:text-amber-400 p-2 rounded-full hover:bg-white/5 transition-all duration-300">

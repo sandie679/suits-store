@@ -102,7 +102,7 @@ export default function Trending() {
   };
 
   return (
-    <section ref={sectionRef} className="relative py-20 overflow-hidden">
+    <section id="trend" ref={sectionRef} className="relative py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-semibold mb-10 text-left">
           Trending Styles

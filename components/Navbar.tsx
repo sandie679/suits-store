@@ -144,7 +144,7 @@ export default function Navbar() {
             <button onClick={() => handleCollectionClick('/womencollection')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
               Womenswear
             </button>
-            <button onClick={() => handleCollectionClick('/collections')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
+            <button onClick={() => handleCollectionClick('/mensware')} className="text-gray-300 hover:text-amber-400 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
              Menswear
             </button>
        

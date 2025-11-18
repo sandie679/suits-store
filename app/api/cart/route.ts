@@ -5,6 +5,7 @@ import Cart from "@/models/cart";
 import Post from "@/models/post";
 import Wedding from "@/models/wedding";
 import Womensware from "@/models/womensware";
+import Mensware from "@/models/mensware";
 
 
 export async function GET() {
@@ -72,6 +73,9 @@ export async function POST(req: NextRequest) {
       product = await Womensware.findById(productId);
     }
     if (!product) {
+      product = await Mensware.findById(productId);
+    }
+    if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
@@ -97,13 +101,13 @@ export async function POST(req: NextRequest) {
       cart.items[existingItemIndex].quantity += quantity;
     } else {
     
-      const parsedPrice = parseFloat(product.price.replace(/[^0-9.-]/g, '')) || 0;
+      const parsedPrice = typeof product.price === 'string' ? (parseFloat(product.price.replace(/[^0-9.-]/g, '')) || 0) : (product.price || 0);
       console.log('Parsed price:', { original: product.price, parsed: parsedPrice });
       cart.items.push({
         productId,
         quantity,
         price: parsedPrice,
-        title: product.description || 'Untitled',
+        title: product.title || product.description || 'Untitled',
         imageUrl: product.imageUrl,
       });
     }

@@ -13,7 +13,7 @@ export async function POST() {
 
     await connect();
 
-    // Find user by email
+  
     const User = (await import("@/models/users")).default;
     const user = await User.findOne({ email: session.user.email });
 
@@ -21,14 +21,14 @@ export async function POST() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get cart
+ 
     const cart = await Cart.findOne({ userId: user._id });
 
     if (!cart || cart.items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    // PayPal order structure
+
     const orderData = {
       intent: "CAPTURE",
       purchase_units: [
@@ -59,8 +59,7 @@ export async function POST() {
       },
     };
 
-    // In a real implementation, you would call PayPal's API here
-    // For now, we'll return mock data
+    
     const mockOrderId = `PAYPAL-${Date.now()}`;
 
     return NextResponse.json({

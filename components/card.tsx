@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 interface TrendItem {
   _id: string;
@@ -15,15 +14,10 @@ interface TrendItem {
 
 const Card = () => {
   const router = useRouter();
-  const { data: session } = useSession();
   const [items, setItems] = useState<TrendItem[]>([]);
 
   const handleShopClick = () => {
-    if (session) {
-      router.push('/collections');
-    } else {
-      router.push('/signin');
-    }
+    router.push('/collections');
   };
 
   useEffect(() => {

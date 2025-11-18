@@ -13,11 +13,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleCollectionClick = (path: string) => {
-    if (session) {
-      router.push(path);
-    } else {
-      router.push('/signin');
-    }
+    router.push(path);
   };
 
   return (

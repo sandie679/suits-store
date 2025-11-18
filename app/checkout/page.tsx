@@ -118,10 +118,10 @@ export default function CheckoutPage() {
 
       const { paymentIntentId } = await res.json();
 
-      // For demo purposes, simulate successful payment
+     
       alert(`Payment successful! Processing order...`);
 
-      // Create order
+   
       await createOrder('stripe', paymentIntentId, null);
 
       router.push('/checkout/success');

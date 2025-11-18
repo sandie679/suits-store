@@ -10,11 +10,6 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { quantity } = await req.json();
 
     if (quantity < 1) {
@@ -23,15 +18,29 @@ export async function PUT(
 
     await connect();
 
-    // Find user by email
-    const User = (await import("@/models/users")).default;
-    const user = await User.findOne({ email: session.user.email });
+    let cart;
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (session?.user) {
+      // User is logged in
+      const User = (await import("@/models/users")).default;
+      const user = await User.findOne({ email: session.user.email });
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ userId: user._id });
+    } else {
+      // Anonymous user
+      const cookies = req.cookies;
+      const sessionId = cookies.get('cart-session-id')?.value;
+
+      if (!sessionId) {
+        return NextResponse.json({ error: "No cart session found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ sessionId });
     }
-
-    const cart = await Cart.findOne({ userId: user._id });
 
     if (!cart) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
@@ -67,21 +76,31 @@ export async function DELETE(
   try {
     const session = await getServerSession();
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     await connect();
 
-    // Find user by email
-    const User = (await import("@/models/users")).default;
-    const user = await User.findOne({ email: session.user.email });
+    let cart;
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (session?.user) {
+      // User is logged in
+      const User = (await import("@/models/users")).default;
+      const user = await User.findOne({ email: session.user.email });
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ userId: user._id });
+    } else {
+      // Anonymous user
+      const cookies = req.cookies;
+      const sessionId = cookies.get('cart-session-id')?.value;
+
+      if (!sessionId) {
+        return NextResponse.json({ error: "No cart session found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ sessionId });
     }
-
-    const cart = await Cart.findOne({ userId: user._id });
 
     if (!cart) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });

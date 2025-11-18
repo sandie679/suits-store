@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface CollectionItem {
@@ -15,15 +14,10 @@ interface CollectionItem {
 const Collection = () => {
   const [collections, setCollections] = useState<CollectionItem[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { data: session } = useSession();
   const router = useRouter();
 
   const handleShopClick = () => {
-    if (session) {
-      router.push('/collections');
-    } else {
-      router.push('/signin');
-    }
+    router.push('/collections');
   };
 
   useEffect(() => {

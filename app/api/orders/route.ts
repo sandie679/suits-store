@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     await connect();
 
-    // Find user by email
+ 
     const User = (await import("@/models/users")).default;
     const user = await User.findOne({ email: session.user.email });
 
@@ -24,20 +24,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get cart
+ 
     const cart = await Cart.findOne({ userId: user._id });
 
     if (!cart || cart.items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    // Calculate totals
+  
     const subtotal = cart.totalAmount;
-    const tax = subtotal * 0.08; // 8% tax
-    const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
+    const tax = subtotal * 0.08; 
+    const shipping = subtotal > 100 ? 0 : 10; 
     const totalAmount = subtotal + tax + shipping;
 
-    // Create order
+    
     const order = await Order.create({
       userId: user._id,
       items: cart.items,
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       paypalOrderId,
     });
 
-    // Clear cart
+   
     await Cart.findByIdAndDelete(cart._id);
 
     return NextResponse.json(order, { status: 201 });
@@ -72,7 +72,6 @@ export async function GET() {
 
     await connect();
 
-    // Find user by email
     const User = (await import("@/models/users")).default;
     const user = await User.findOne({ email: session.user.email });
 

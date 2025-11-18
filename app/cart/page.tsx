@@ -26,7 +26,7 @@ interface Cart {
 }
 
 export default function CartPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,13 +34,8 @@ export default function CartPage() {
   useEffect(() => {
     if (status === 'loading') return;
 
-    if (!session) {
-      router.push('/signin');
-      return;
-    }
-
     fetchCart();
-  }, [session, status, router]);
+  }, [status]);
 
   const fetchCart = async () => {
     try {
@@ -100,10 +95,6 @@ export default function CartPage() {
         <p className="text-xl">Loading cart...</p>
       </div>
     );
-  }
-
-  if (!session) {
-    return null;
   }
 
   return (

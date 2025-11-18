@@ -18,7 +18,7 @@ export async function POST() {
 
     await connect();
 
-    // Find user by email
+    
     const User = (await import("@/models/users")).default;
     const user = await User.findOne({ email: session.user.email });
 
@@ -26,17 +26,16 @@ export async function POST() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get cart
+   
     const cart = await Cart.findOne({ userId: user._id });
 
     if (!cart || cart.items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    // Calculate amount in cents
+ 
     const amount = Math.round(cart.totalAmount * 100);
 
-    // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",

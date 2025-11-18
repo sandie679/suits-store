@@ -8,25 +8,46 @@ import Womensware from "@/models/womensware";
 import Mensware from "@/models/mensware";
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const cookies = req.cookies;
+    const cartSessionId = cookies.get('cart-session-id')?.value;
 
     await connect();
 
-    
-    const User = (await import("@/models/users")).default;
-    const user = await User.findOne({ email: session.user.email });
+    let cart;
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (session?.user) {
+      
+      const User = (await import("@/models/users")).default;
+      const user = await User.findOne({ email: session.user.email });
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ userId: user._id }).populate('items.productId');
+
+      // If user has no cart but there's an anonymous cart, merge them
+      if (!cart && cartSessionId) {
+        const anonymousCart = await Cart.findOne({ sessionId: cartSessionId });
+        if (anonymousCart) {
+          // Transfer anonymous cart to user
+          anonymousCart.userId = user._id;
+          anonymousCart.sessionId = undefined;
+          await anonymousCart.save();
+          cart = anonymousCart;
+        }
+      }
+    } else {
+
+      if (!cartSessionId) {
+
+        return NextResponse.json({ items: [], totalAmount: 0 }, { status: 200 });
+      }
+      cart = await Cart.findOne({ sessionId: cartSessionId }).populate('items.productId');
     }
-
-    const cart = await Cart.findOne({ userId: user._id }).populate('items.productId');
 
     if (!cart) {
       return NextResponse.json({ items: [], totalAmount: 0 }, { status: 200 });
@@ -43,11 +64,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { productId, quantity = 1 } = await req.json();
 
     if (!productId) {
@@ -57,14 +73,6 @@ export async function POST(req: NextRequest) {
     await connect();
 
    
-    const User = (await import("@/models/users")).default;
-    const user = await User.findOne({ email: session.user.email });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    
     let product = await Post.findById(productId);
     if (!product) {
       product = await Wedding.findById(productId);
@@ -81,15 +89,49 @@ export async function POST(req: NextRequest) {
 
     console.log('Product found:', { productId, price: product.price, priceType: typeof product.price });
 
-    
-    let cart = await Cart.findOne({ userId: user._id });
+    let cart;
+    let response = NextResponse.json({}, { status: 200 });
 
-    if (!cart) {
-      cart = new Cart({
-        userId: user._id,
-        items: [],
-        totalAmount: 0,
-      });
+    if (session?.user) {
+     
+      const User = (await import("@/models/users")).default;
+      const user = await User.findOne({ email: session.user.email });
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      cart = await Cart.findOne({ userId: user._id });
+      if (!cart) {
+        cart = new Cart({
+          userId: user._id,
+          items: [],
+          totalAmount: 0,
+        });
+      }
+    } else {
+
+      const cookies = req.cookies;
+      let cartSessionId = cookies.get('cart-session-id')?.value;
+
+      if (!cartSessionId) {
+        cartSessionId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        response.cookies.set('cart-session-id', cartSessionId, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 30,
+        });
+      }
+
+      cart = await Cart.findOne({ sessionId: cartSessionId });
+      if (!cart) {
+        cart = new Cart({
+          sessionId: cartSessionId,
+          items: [],
+          totalAmount: 0,
+        });
+      }
     }
 
     const existingItemIndex = cart.items.findIndex(
@@ -97,10 +139,8 @@ export async function POST(req: NextRequest) {
     );
 
     if (existingItemIndex > -1) {
-     
       cart.items[existingItemIndex].quantity += quantity;
     } else {
-    
       const parsedPrice = typeof product.price === 'string' ? (parseFloat(product.price.replace(/[^0-9.-]/g, '')) || 0) : (product.price || 0);
       console.log('Parsed price:', { original: product.price, parsed: parsedPrice });
       cart.items.push({
@@ -114,7 +154,20 @@ export async function POST(req: NextRequest) {
 
     await cart.save();
 
-    return NextResponse.json(cart, { status: 200 });
+    
+    response = NextResponse.json(cart, { status: 200 });
+    if (!session?.user && !req.cookies.get('cart-session-id')) {
+
+      const cartSessionId = cart.sessionId;
+      response.cookies.set('cart-session-id', cartSessionId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    }
+
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

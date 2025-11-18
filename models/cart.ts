@@ -32,7 +32,11 @@ const cartSchema = new Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
+    },
+    sessionId: {
+      type: String,
+      required: false,
     },
     items: [cartItemSchema],
     totalAmount: {
@@ -42,6 +46,14 @@ const cartSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Ensure either userId or sessionId is present
+cartSchema.pre('validate', function(next) {
+  if (!this.userId && !this.sessionId) {
+    next(new Error('Either userId or sessionId must be provided'));
+  }
+  next();
+});
 
 // Update total amount before saving
 cartSchema.pre('save', function(next) {

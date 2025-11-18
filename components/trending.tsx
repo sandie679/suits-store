@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 import AddToCartButton from "./AddToCartButton";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,7 +23,6 @@ export default function Trending() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [maxTranslate, setMaxTranslate] = useState(0);
   const [cardWidth, setCardWidth] = useState(0);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
